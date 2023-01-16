@@ -1,7 +1,4 @@
 #define SWITCH_PIN      2 // input for toggle switch
-#define LED_PIN1      	7 // output to FET module
-#define LED_PIN2      	8 // output to FET module
-
 #define STROBE_COUNT_DELAY7 18000 // [ms] time between strobe cycles
 #define STROBE_COUNT_DELAY8 16000 // [ms] time between strobe cycles
 
@@ -14,7 +11,7 @@ int strobe_count2 = 0;
 // byte target, current; // target and current pwm value
 
 int FADE_INTERVAL_7 = 	30; // [ms] time between fade steps
-int NEXTFADE_INTERVAL_7 = 1500; // [ms] time between fade cycles
+int NEXTFADE_INTERVAL_7 = 150; // [ms] time between fade cycles
 int FADE_INTERVAL_8 = 	30; // [ms] time between fade steps
 int NEXTFADE_INTERVAL_8 = 1500; // [ms] time between fade cycles
 int FADE_INTERVAL_9 = 	30; // [ms] time between fade steps
@@ -39,7 +36,7 @@ unsigned long debounceDelay = 50;    // the debounce time; increase if the outpu
 void setup() {
   pinMode(SWITCH_PIN, INPUT);
   pinMode(1, OUTPUT); //base smoke white LED
-  pinMode(2, OUTPUT); //base smoke white LED
+ // pinMode(2, OUTPUT); //base smoke white LED
   pinMode(3, OUTPUT); //base smoke white LED
   pinMode(4, OUTPUT); //base smoke white LED
   pinMode(5, OUTPUT); //base smoke white LED
@@ -88,120 +85,56 @@ void loop()
     // button hasn't been pressed yet (or has been reset)
     if (num_presses == 0)
     {
-      digitalWrite(1, LOW);
-      digitalWrite(2, LOW);
-      digitalWrite(3, LOW);
-      digitalWrite(4, LOW);
-      digitalWrite(5, LOW);
-      digitalWrite(6, LOW);
-    	digitalWrite(7, LOW);
-      digitalWrite(8, LOW);
-      digitalWrite(9, LOW);
+      analogWrite(1, LOW);
+      analogWrite(2, LOW);
+      analogWrite(3, LOW);
+      analogWrite(4, LOW);
+      analogWrite(5, LOW);
+      analogWrite(6, LOW);
+    	analogWrite(7, LOW);
+      analogWrite(8, LOW);
+      analogWrite(9, LOW);
       Serial.println("num_presses 0");
     }
     // button has been pressed once!
     if (num_presses == 1)
     {
-      digitalWrite(1, HIGH);
-      digitalWrite(2, HIGH);
-      digitalWrite(3, HIGH);
-    	digitalWrite(4, HIGH);
-      digitalWrite(5, HIGH);
-      digitalWrite(6, HIGH);
-    	digitalWrite(7, LOW);
-      digitalWrite(8, LOW);
-      digitalWrite(9, LOW);
+      analogWrite(1, HIGH);
+      analogWrite(2, HIGH);
+     // digitalWrite(3, HIGH);
+    //	digitalWrite(4, HIGH);
+      //digitalWrite(5, HIGH);
+      analogWrite(6, 255);
+    	analogWrite(7, LOW);
+      analogWrite(8, LOW);
+      analogWrite(9, LOW);
       Serial.println("num_presses 1"); 
     }
   // button has been pressed twice!
     if (num_presses == 2)
     {        
-      digitalWrite(1, HIGH);
-      digitalWrite(2, HIGH);
-      digitalWrite(3, HIGH);
-      digitalWrite(4, HIGH);
-      digitalWrite(5, HIGH);
-      digitalWrite(6, HIGH);
+      analogWrite(1, HIGH);
+      analogWrite(2, HIGH);
+     // digitalWrite(3, HIGH);
+     // digitalWrite(4, HIGH);
+     // digitalWrite(5, HIGH);
+     // digitalWrite(6, HIGH);
       Serial.println("num_presses 2");
   
     //LED_PIN1
-  if (millis() > time_for_nextfade_7) {
-    time_for_nextfade_7 = millis() + (unsigned long)NEXTFADE_INTERVAL_7;
-  if (current1 == 0) { 
-    target1 = 20;
-    strobe_count1 += 1;
+  //if (millis() > time_for_nextfade_7) {
+   // time_for_nextfade_7 = millis() + (unsigned long)NEXTFADE_INTERVAL_7;
+    analogWrite(3, random(120)+135);
+    analogWrite(4, random(120)+135);
+    analogWrite(5, random(120)+135);
+    analogWrite(6, random(254)+1);
     Serial.println("strobe_count1");
-  }}
-  
-   if (current1 == 20) { 
-    target1 = 0;
-   }
-  
-  if (millis() > time_for_fadestep_7) {
-    time_for_fadestep_7 = millis() + (unsigned long)FADE_INTERVAL_7;
-    if (current1 < target1) current1 +=4; 
-    if (current1 > target1) current1 -=1; 
-    analogWrite(LED_PIN1, current1);
-    Serial.print(target1);
-    Serial.print("  ");
-    Serial.println(current1);
-  }
-      
-  //LED_PIN2
-  if (millis() > time_for_nextfade_8) {
-    time_for_nextfade_8 = millis() + (unsigned long)NEXTFADE_INTERVAL_8;
-  if (current2 == 1) { 
-    target2 = 20;
-    strobe_count2 += 1;
-    Serial.println("strobe_count2");
-  }}
-  
-   if (current2 == 20) { 
-    target2 = 0;
-   }
-  
-  if (millis() > time_for_fadestep_8) {
-    time_for_fadestep_8 = millis() + (unsigned long)FADE_INTERVAL_8;
-    if (current2 < target2) current2 +=4; 
-    if (current2 > target2) current2 -=1; 
-    analogWrite(LED_PIN2, current2);
-    Serial.print(target2);
-    Serial.print("  ");
-    Serial.println(current2);
-  }
   }
   
-  
-    if (digitalRead(10) == HIGH && num_presses == 3)
+    if (digitalRead(2) == HIGH && num_presses == 3)
     {
         Serial.println("num_presses 3, resetting num_presses to 0");
         num_presses = 0;
     }
-  
-  // stobe count 1 causes reset
-    if (strobe_count1 == 6)
-    {
-      	num_presses = 1;
-        Serial.println("stobe count delay1");
-      
-    if (millis() > time_for_strobe_delay7) {
-    time_for_strobe_delay7 = millis() + (unsigned long)STROBE_COUNT_DELAY7;
-        strobe_count1 = 0;
-       	num_presses = 2;
-    } 
-  }
-
-  // stobe count 2 causes reset
-    if (strobe_count1 == 6)
-    {
-      	num_presses = 1;
-        Serial.println("stobe count delay2");
-      
-    if (millis() > time_for_strobe_delay8) {
-    time_for_strobe_delay8 = millis() + (unsigned long)STROBE_COUNT_DELAY8;
-        strobe_count2 = 0;
-       	num_presses = 2;
-    } 
-  }
 }
     
