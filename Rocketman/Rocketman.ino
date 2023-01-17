@@ -1,4 +1,4 @@
-#define SWITCH_PIN      2 // input for toggle switch
+#define SWITCH_PIN      10 // input for toggle switch
 #define STROBE_COUNT_DELAY7 18000 // [ms] time between strobe cycles
 #define STROBE_COUNT_DELAY8 16000 // [ms] time between strobe cycles
 
@@ -35,15 +35,15 @@ unsigned long debounceDelay = 50;    // the debounce time; increase if the outpu
 
 void setup() {
   pinMode(SWITCH_PIN, INPUT);
-  pinMode(1, OUTPUT); //base smoke white LED
- // pinMode(2, OUTPUT); //base smoke white LED
-  pinMode(3, OUTPUT); //base smoke white LED
+  pinMode(0, OUTPUT); //base smoke white LED
+  pinMode(2, OUTPUT); //base smoke white LED
+  pinMode(3, OUTPUT); //flickering LED
   pinMode(4, OUTPUT); //base smoke white LED
-  pinMode(5, OUTPUT); //base smoke white LED
-  pinMode(6, OUTPUT); //Solid yellow LED
-  pinMode(7, OUTPUT); //flickering LED
+  pinMode(5, OUTPUT); //Solid yellow LED
+  pinMode(6, OUTPUT); //flickering LED
+  pinMode(7, OUTPUT); //base smoke white LED
   pinMode(8, OUTPUT); //flickering LED
-  pinMode(9, OUTPUT); //flickering LED
+  pinMode(9, OUTPUT); //base smoke white LED
 
   Serial.begin(9600);
 }
@@ -85,7 +85,7 @@ void loop()
     // button hasn't been pressed yet (or has been reset)
     if (num_presses == 0)
     {
-      analogWrite(1, LOW);
+      analogWrite(0, LOW);
       analogWrite(2, LOW);
       analogWrite(3, LOW);
       analogWrite(4, LOW);
@@ -99,35 +99,34 @@ void loop()
     // button has been pressed once!
     if (num_presses == 1)
     {
-      analogWrite(1, HIGH);
-      analogWrite(2, HIGH);
-     // digitalWrite(3, HIGH);
-    //	digitalWrite(4, HIGH);
-      //digitalWrite(5, HIGH);
-      analogWrite(6, 255);
-    	analogWrite(7, LOW);
+      analogWrite(0, 255);
+      analogWrite(2, 255);
+      analogWrite(3, LOW);
+      analogWrite(4, 255);
+      analogWrite(5, LOW);
+      analogWrite(6, LOW);
+    	analogWrite(7, 255);
       analogWrite(8, LOW);
-      analogWrite(9, LOW);
+      analogWrite(9, 255);
       Serial.println("num_presses 1"); 
     }
   // button has been pressed twice!
     if (num_presses == 2)
     {        
-      analogWrite(1, HIGH);
-      analogWrite(2, HIGH);
-     // digitalWrite(3, HIGH);
-     // digitalWrite(4, HIGH);
-     // digitalWrite(5, HIGH);
-     // digitalWrite(6, HIGH);
+      analogWrite(0, 180);
+      analogWrite(2, 180);
+      analogWrite(4, 180);
+      analogWrite(7, 180);
+      analogWrite(9, 180);
       Serial.println("num_presses 2");
   
     //LED_PIN1
   //if (millis() > time_for_nextfade_7) {
    // time_for_nextfade_7 = millis() + (unsigned long)NEXTFADE_INTERVAL_7;
     analogWrite(3, random(120)+135);
-    analogWrite(4, random(120)+135);
-    analogWrite(5, random(120)+135);
-    analogWrite(6, random(254)+1);
+    analogWrite(6, random(120)+135);
+    analogWrite(8, random(120)+135);
+    analogWrite(5, random(254)+1);
     Serial.println("strobe_count1");
   }
   
